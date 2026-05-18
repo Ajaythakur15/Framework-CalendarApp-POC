@@ -15,6 +15,8 @@ pool:
 
 variables:
   buildConfiguration: 'Release'
+  testProject: 'Uhm.Framework.CalendarApp.Poc.Tests/Uhm.Framework.CalendarApp.Poc.Tests.csproj'
+  testResultsFolder: 'Uhm.Framework.CalendarApp.Poc.Tests/bin/Debug/net8.0/TestResults'
 
 steps:
 - task: UseDotNet@2
@@ -27,7 +29,7 @@ steps:
   displayName: Restore project
   inputs:
     command: restore
-    projects: 'Uhm.Framework.CalendarApp.Poc.Tests/Uhm.Framework.CalendarApp.Poc.Tests.csproj'
+    projects: '$(testProject)'
     feedsToUse: config
     nugetConfigPath: 'NuGet.Poc.Config'
 
@@ -35,13 +37,21 @@ steps:
   displayName: Build project
   inputs:
     command: build
-    projects: 'Uhm.Framework.CalendarApp.Poc.Tests/Uhm.Framework.CalendarApp.Poc.Tests.csproj'
+    projects: '$(testProject)'
     arguments: '--configuration $(buildConfiguration) --no-restore'
 
 - task: DotNetCoreCLI@2
   displayName: Run tests
   inputs:
     command: test
-    projects: 'Uhm.Framework.CalendarApp.Poc.Tests/Uhm.Framework.CalendarApp.Poc.Tests.csproj'
+    projects: '$(testProject)'
     arguments: '--configuration $(buildConfiguration) --no-build'
     publishTestResults: true
+
+- task: PublishPipelineArtifact@1
+  displayName: Publish Extent report and screenshots
+  condition: always()
+  inputs:
+    targetPath: '$(Build.SourcesDirectory)/$(testResultsFolder)'
+    artifact: 'calendarapp-testresults'
+    publishLocation: 'pipeline'
