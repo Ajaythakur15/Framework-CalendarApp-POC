@@ -1,7 +1,7 @@
 Feature: Manage Access
   As a calendar administrator
   I want to access the Manage Access module
-  So that I can manage access for teams
+  So that I can manage user access for teams
 
   @smoke @manageaccess
   Scenario: Open Add Access popup from Manage Access

@@ -35,8 +35,8 @@ namespace Uhm.Framework.CalendarApp.Poc.Tests.Features
         public virtual void FeatureSetup()
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
-            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Features", "Create Team", "  As a calendar administrator\r\n  I want to add a new team\r\n  So that the team can" +
-                    " be managed in the calendar app", ProgrammingLanguage.CSharp, featureTags);
+            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Features", "Create Team", "  As a calendar administrator\r\n  I want to create a new team\r\n  So that the team " +
+                    "can be managed and used within the calendar application", ProgrammingLanguage.CSharp, featureTags);
             testRunner.OnFeatureStart(featureInfo);
         }
         

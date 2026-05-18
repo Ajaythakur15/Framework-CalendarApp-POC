@@ -1,7 +1,7 @@
 Feature: Create Access
   As a calendar administrator
-  I want to add access for a team member
-  So that the team member can use the calendar module
+  I want to create access for a team member
+  So that the user can work with the calendar module
 
   @regression @manageaccess
   Scenario: Create new access from Manage Access

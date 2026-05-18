@@ -36,7 +36,7 @@ namespace Uhm.Framework.CalendarApp.Poc.Tests.Features
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
             TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Features", "Manage Access", "  As a calendar administrator\r\n  I want to access the Manage Access module\r\n  So " +
-                    "that I can manage access for teams", ProgrammingLanguage.CSharp, featureTags);
+                    "that I can manage user access for teams", ProgrammingLanguage.CSharp, featureTags);
             testRunner.OnFeatureStart(featureInfo);
         }
         

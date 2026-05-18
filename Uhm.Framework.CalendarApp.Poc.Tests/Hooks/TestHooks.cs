@@ -6,72 +6,93 @@ using Uhm.Framework.CalendarApp.Poc.Tests.Drivers;
 using Uhm.Framework.CalendarApp.Poc.Tests.Support;
 using Uhm.Framework.CalendarApp.Poc.Tests.Utilities;
 
-namespace Uhm.Framework.CalendarApp.Poc.Tests.Hooks;
-
-[Binding]
-public class TestHooks
+namespace Uhm.Framework.CalendarApp.Poc.Tests.Hooks
 {
-    private readonly IObjectContainer _container;
-    private readonly ScenarioContext _scenarioContext;
-    private IWebDriver? _driver;
-    private ExtentTest? _scenario;
-
-    public TestHooks(IObjectContainer container, ScenarioContext scenarioContext)
+    /// <summary>
+    /// SpecFlow hooks class responsible for test setup and cleanup activities
+    /// before and after each scenario execution.
+    /// </summary>
+    [Binding]
+    public class TestHooks
     {
-        _container = container;
-        _scenarioContext = scenarioContext;
-    }
+        private readonly IObjectContainer _container;
+        private readonly ScenarioContext _scenarioContext;
+        private IWebDriver? _driver;
+        private ExtentTest? _scenario;
 
-    [BeforeScenario]
-    public void BeforeScenario()
-    {
-        var settings = TestSettings.Load();
-        _driver = WebDriverFactory.Create(settings.Headless);
-
-        _container.RegisterInstanceAs(_driver);
-        _container.RegisterInstanceAs(settings);
-
-        _scenario = ExtentReportManager
-            .GetInstance()
-            .CreateTest(_scenarioContext.ScenarioInfo.Title);
-    }
-
-    [AfterStep]
-    public void AfterStep()
-    {
-        if (_scenario == null)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TestHooks"/> class
+        /// with the required SpecFlow container and scenario context.
+        /// </summary>
+        /// <param name="container">The dependency injection container used by SpecFlow.</param>
+        /// <param name="scenarioContext">The current scenario execution context.</param>
+        public TestHooks(IObjectContainer container, ScenarioContext scenarioContext)
         {
-            return;
+            _container = container;
+            _scenarioContext = scenarioContext;
         }
 
-        var stepText = $"{_scenarioContext.StepContext.StepInfo.StepDefinitionType} {_scenarioContext.StepContext.StepInfo.Text}";
+        /// <summary>
+        /// Performs browser and test configuration setup before each scenario starts.
+        /// </summary>
+        [BeforeScenario]
+        public void BeforeScenario()
+        {
+            var settings = TestSettings.Load();
+            _driver = WebDriverFactory.Create(settings.Headless);
 
-        if (_scenarioContext.TestError == null)
-        {
-            _scenario.Pass(stepText);
-        }
-        else
-        {
-            _scenario.Fail($"{stepText}<br>{_scenarioContext.TestError.Message}");
-        }
-    }
+            _container.RegisterInstanceAs(_driver);
+            _container.RegisterInstanceAs(settings);
 
-    [AfterScenario]
-    public void AfterScenario()
-    {
-        try
+            _scenario = ExtentReportManager
+                .GetInstance()
+                .CreateTest(_scenarioContext.ScenarioInfo.Title);
+        }
+
+        /// <summary>
+        /// Captures the result of each executed step and writes it into the Extent report.
+        /// </summary>
+        [AfterStep]
+        public void AfterStep()
         {
-            if (_scenarioContext.TestError != null && _driver != null && _scenario != null)
+            if (_scenario == null)
             {
-                var screenshotPath = ScreenshotHelper.TakeScreenshot(_driver, _scenarioContext.ScenarioInfo.Title);
-                _scenario.AddScreenCaptureFromPath(screenshotPath);
-                Console.WriteLine($"Screenshot saved: {screenshotPath}");
+                return;
+            }
+
+            var stepText = $"{_scenarioContext.StepContext.StepInfo.StepDefinitionType} {_scenarioContext.StepContext.StepInfo.Text}";
+
+            if (_scenarioContext.TestError == null)
+            {
+                _scenario.Pass(stepText);
+            }
+            else
+            {
+                _scenario.Fail($"{stepText}<br>{_scenarioContext.TestError.Message}");
             }
         }
-        finally
+
+        /// <summary>
+        /// Performs cleanup after each scenario, including screenshot capture on failure,
+        /// browser shutdown, and report flushing.
+        /// </summary>
+        [AfterScenario]
+        public void AfterScenario()
         {
-            _driver?.Quit();
-            ExtentReportManager.Flush();
+            try
+            {
+                if (_scenarioContext.TestError != null && _driver != null && _scenario != null)
+                {
+                    var screenshotPath = ScreenshotHelper.TakeScreenshot(_driver, _scenarioContext.ScenarioInfo.Title);
+                    _scenario.AddScreenCaptureFromPath(screenshotPath);
+                    Console.WriteLine($"Screenshot saved: {screenshotPath}");
+                }
+            }
+            finally
+            {
+                _driver?.Quit();
+                ExtentReportManager.Flush();
+            }
         }
     }
 }

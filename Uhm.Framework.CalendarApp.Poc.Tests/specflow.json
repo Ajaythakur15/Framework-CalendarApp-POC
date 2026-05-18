@@ -4,5 +4,11 @@
   },
   "language": {
     "feature": "en-us"
+  },
+  "generator": {
+    "allowDebugGeneratedFiles": false
+  },
+  "runtime": {
+    "missingOrPendingStepsOutcome": "Inconclusive"
   }
 }

@@ -1,39 +1,77 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+	<!--
+		This project file configures the Calendar App BDD automation project
+		as a .NET 8 test automation framework using SpecFlow, NUnit, and Selenium WebDriver.
+		It also ensures runtime configuration files are copied during build
+		and that SpecFlow feature files are generated correctly.
+	-->
+
 	<PropertyGroup>
+		<!-- Target framework used for building and running the automation project -->
 		<TargetFramework>net8.0</TargetFramework>
+
+		<!-- Enables the latest available C# language version -->
 		<LangVersion>latest</LangVersion>
+
+		<!-- Automatically includes common namespace imports -->
 		<ImplicitUsings>enable</ImplicitUsings>
+
+		<!-- Enables nullable reference type checking -->
 		<Nullable>enable</Nullable>
+
+		<!-- Prevents this test project from being packed as a NuGet package -->
 		<IsPackable>false</IsPackable>
 	</PropertyGroup>
 
 	<ItemGroup>
+		<!-- Core SpecFlow package for BDD feature file execution -->
 		<PackageReference Include="SpecFlow" Version="3.9.74" />
+
+		<!-- Integrates SpecFlow with NUnit -->
 		<PackageReference Include="SpecFlow.NUnit" Version="3.9.74" />
+
+		<!-- Generates SpecFlow code-behind files during build -->
 		<PackageReference Include="SpecFlow.Tools.MsBuild.Generation" Version="3.9.74" />
+
+		<!-- Core Selenium package for browser automation -->
 		<PackageReference Include="Selenium.WebDriver" Version="4.21.0" />
+
+		<!-- Selenium support package for waits and helper utilities -->
 		<PackageReference Include="Selenium.Support" Version="4.21.0" />
+
+		<!-- Required for .NET test discovery and execution -->
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.10.0" />
+
+		<!-- NUnit test framework -->
 		<PackageReference Include="NUnit" Version="4.1.0" />
+
+		<!-- Adapter for running NUnit tests in .NET test platform -->
 		<PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
 	</ItemGroup>
 
 	<ItemGroup>
+		<!-- Global using for NUnit framework -->
 		<Using Include="NUnit.Framework" />
 	</ItemGroup>
 
 	<ItemGroup>
+		<!-- Copies runtime application configuration file to output directory -->
 		<None Update="appsettings.json">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
+
+		<!-- Copies SpecFlow configuration file to output directory -->
 		<None Update="specflow.json">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
 	</ItemGroup>
 
 	<ItemGroup>
+		<!-- Prevents .feature files from being treated as C# compile files -->
 		<Compile Remove="Features\**\*.feature" />
+
+		<!-- Configures SpecFlow generator for feature files -->
 		<None Update="Features\**\*.feature">
 			<Generator>SpecFlowSingleFileGenerator</Generator>
 			<LastGenOutput>%(Filename).feature.cs</LastGenOutput>

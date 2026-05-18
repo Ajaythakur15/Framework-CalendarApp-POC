@@ -35,8 +35,8 @@ namespace Uhm.Framework.CalendarApp.Poc.Tests.Features
         public virtual void FeatureSetup()
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
-            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Features", "Calendar Smoke", "  As a user\r\n  I want to open the calendar application\r\n  So that I can verify it" +
-                    " loads successfully", ProgrammingLanguage.CSharp, featureTags);
+            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Features", "Calendar Smoke", "  As a user of the calendar application\r\n  I want to open the application success" +
+                    "fully\r\n  So that I can confirm the Calendar module is available", ProgrammingLanguage.CSharp, featureTags);
             testRunner.OnFeatureStart(featureInfo);
         }
         
@@ -77,10 +77,12 @@ namespace Uhm.Framework.CalendarApp.Poc.Tests.Features
         [NUnit.Framework.TestAttribute()]
         [NUnit.Framework.DescriptionAttribute("Open calendar home page")]
         [NUnit.Framework.CategoryAttribute("smoke")]
+        [NUnit.Framework.CategoryAttribute("calendar")]
         public void OpenCalendarHomePage()
         {
             string[] tagsOfScenario = new string[] {
-                    "smoke"};
+                    "smoke",
+                    "calendar"};
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Open calendar home page", null, tagsOfScenario, argumentsOfScenario, featureTags);
 #line 7

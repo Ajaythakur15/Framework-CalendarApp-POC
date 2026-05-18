@@ -1,7 +1,7 @@
 Feature: Create Team
   As a calendar administrator
-  I want to add a new team
-  So that the team can be managed in the calendar app
+  I want to create a new team
+  So that the team can be managed and used within the calendar application
 
   @regression @manageteams
   Scenario: Create a new team from Manage Teams

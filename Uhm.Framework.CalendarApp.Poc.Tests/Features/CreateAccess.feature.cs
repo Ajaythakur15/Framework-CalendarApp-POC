@@ -35,8 +35,8 @@ namespace Uhm.Framework.CalendarApp.Poc.Tests.Features
         public virtual void FeatureSetup()
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
-            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Features", "Create Access", "  As a calendar administrator\r\n  I want to add access for a team member\r\n  So tha" +
-                    "t the team member can use the calendar module", ProgrammingLanguage.CSharp, featureTags);
+            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Features", "Create Access", "  As a calendar administrator\r\n  I want to create access for a team member\r\n  So " +
+                    "that the user can work with the calendar module", ProgrammingLanguage.CSharp, featureTags);
             testRunner.OnFeatureStart(featureInfo);
         }
         
