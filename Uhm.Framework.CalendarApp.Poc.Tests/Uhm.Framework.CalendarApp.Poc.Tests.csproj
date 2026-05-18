@@ -9,14 +9,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <SpecFlowFeatureFiles Remove="Features\CalendarSmoke.feature" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Compile Include="Features\CalendarSmoke.feature" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<PackageReference Include="SpecFlow" Version="3.9.74" />
 		<PackageReference Include="SpecFlow.NUnit" Version="3.9.74" />
 		<PackageReference Include="SpecFlow.Tools.MsBuild.Generation" Version="3.9.74" />
@@ -34,6 +26,17 @@
 	<ItemGroup>
 		<None Update="appsettings.json">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="specflow.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Remove="Features\**\*.feature" />
+		<None Update="Features\**\*.feature">
+			<Generator>SpecFlowSingleFileGenerator</Generator>
+			<LastGenOutput>%(Filename).feature.cs</LastGenOutput>
 		</None>
 	</ItemGroup>
 
