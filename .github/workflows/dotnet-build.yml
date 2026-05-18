@@ -1,0 +1,30 @@
+name: Calendar App BDD CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build-and-test:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Restore project
+        run: dotnet restore Uhm.Framework.CalendarApp.Poc.Tests/Uhm.Framework.CalendarApp.Poc.Tests.csproj --configfile NuGet.Poc.Config
+
+      - name: Build project
+        run: dotnet build Uhm.Framework.CalendarApp.Poc.Tests/Uhm.Framework.CalendarApp.Poc.Tests.csproj --no-restore
+
+      - name: Run tests
+        run: dotnet test Uhm.Framework.CalendarApp.Poc.Tests/Uhm.Framework.CalendarApp.Poc.Tests.csproj --no-build
