@@ -25,6 +25,9 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<!-- Report Generator -->
+		<PackageReference Include="ExtentReports" Version="*" />
+
 		<!-- Core SpecFlow package for BDD feature file execution -->
 		<PackageReference Include="SpecFlow" Version="3.9.74" />
 
