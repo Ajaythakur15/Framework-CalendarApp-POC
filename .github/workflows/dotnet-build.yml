@@ -28,3 +28,11 @@ jobs:
 
       - name: Run tests
         run: dotnet test Uhm.Framework.CalendarApp.Poc.Tests/Uhm.Framework.CalendarApp.Poc.Tests.csproj --no-build
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: calendarapp-testresults
+          path: Uhm.Framework.CalendarApp.Poc.Tests/bin/Debug/net8.0/TestResults
+          if-no-files-found: warn
