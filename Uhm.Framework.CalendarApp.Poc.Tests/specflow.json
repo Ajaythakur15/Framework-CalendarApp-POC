@@ -1,3 +1,15 @@
+/// <summary>
+/// Defines SpecFlow runtime and execution configuration settings
+/// for the Calendar App automation framework.
+/// </summary>
+/// <remarks>
+/// This configuration includes:
+/// - Binding culture settings
+/// - Feature language settings
+/// - Generated file behavior
+/// - Runtime handling for missing or pending steps
+/// - We used specflow.json to configure the SpecFlow BDD framework behavior separately from the application execution settings stored in appsettings.json.
+/// </remarks>
 {
   "bindingCulture": {
     "name": "en-us"
