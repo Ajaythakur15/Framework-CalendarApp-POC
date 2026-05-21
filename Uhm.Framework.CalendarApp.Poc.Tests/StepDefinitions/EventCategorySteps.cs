@@ -1,5 +1,4 @@
-﻿using NUnit.Framework;
-using OpenQA.Selenium;
+﻿using OpenQA.Selenium;
 using TechTalk.SpecFlow;
 using Uhm.Framework.CalendarApp.Poc.Tests.Pages;
 using Uhm.Framework.CalendarApp.Poc.Tests.Support;
@@ -30,7 +29,7 @@ namespace Uhm.Framework.CalendarApp.Poc.Tests.StepDefinitions
         /// </summary>
         [When(@"I open the event category dropdown")]
         public void WhenIOpenTheEventCategoryDropdown()
-        {
+        {   
             _calendarHomePage.OpenCategoryDropdown();
         }
 
