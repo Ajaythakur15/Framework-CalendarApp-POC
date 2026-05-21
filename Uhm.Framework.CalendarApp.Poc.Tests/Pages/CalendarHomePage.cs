@@ -20,7 +20,7 @@ namespace Uhm.Framework.CalendarApp.Poc.Tests.Pages
         private readonly By _startDateInput = By.XPath("//label[contains(.,'START DATE')]/following::input[1]");
         private readonly By _endDateInput = By.XPath("//label[contains(.,'END DATE')]/following::input[1]");
         private readonly By _remarkInput = By.XPath("//label[contains(.,'REMARK')]/following::textarea[1]");
-        private readonly By _saveButton = By.XPath("//button[contains(.,'SAVE')]");
+        private readonly By _saveButton = By.XPath("//button[contains(.,'Save')]");
         private readonly By _popupCloseMarker = By.XPath("//*[contains(text(),'Add New Event')]");
         private readonly By _filterDropdown = By.XPath("//input[contains(@placeholder,'Filter')]/following::*[contains(@class,'select') or self::select][1] | //*[contains(text(),'Filter')]/following::*[contains(@class,'select') or self::select][1]");
         private readonly By _calendarContentArea = By.XPath("//*[contains(text(),'Events') or contains(text(),'Shift Management') or contains(text(),'May')]");
