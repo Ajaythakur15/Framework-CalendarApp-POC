@@ -21,7 +21,9 @@ namespace Uhm.Framework.CalendarApp.Poc.Tests.StepDefinitions
         /// <param name="settings">The runtime test settings loaded from configuration.</param>
         public AddEventSteps(IWebDriver driver, TestSettings settings)
         {
-            _calendarHomePage = new CalendarHomePage(driver, settings.ExplicitWaitSeconds);
+            _calendarHomePage = new CalendarHomePage(
+                driver,
+                settings.ExplicitWaitSeconds);
         }
 
         /// <summary>
@@ -30,6 +32,11 @@ namespace Uhm.Framework.CalendarApp.Poc.Tests.StepDefinitions
         [When(@"I click the Add Event button")]
         public void WhenIClickTheAddEventButton()
         {
+            Assert.That(
+                _calendarHomePage.IsCalendarDisplayed(),
+                Is.True,
+                "Calendar page did not load successfully.");
+
             _calendarHomePage.ClickAddEvent();
         }
 
@@ -39,7 +46,10 @@ namespace Uhm.Framework.CalendarApp.Poc.Tests.StepDefinitions
         [Then(@"the Add Event popup should be displayed")]
         public void ThenTheAddEventPopupShouldBeDisplayed()
         {
-            Assert.That(_calendarHomePage.IsAddEventPopupDisplayed(), Is.True);
+            Assert.That(
+                _calendarHomePage.IsAddEventPopupDisplayed(),
+                Is.True,
+                "Add Event popup was not displayed.");
         }
     }
 }

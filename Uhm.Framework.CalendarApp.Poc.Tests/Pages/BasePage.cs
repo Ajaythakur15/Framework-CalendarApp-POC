@@ -28,12 +28,109 @@ namespace Uhm.Framework.CalendarApp.Poc.Tests.Pages
         protected BasePage(IWebDriver driver, int waitSeconds)
         {
             Driver = driver;
-            Wait = new WebDriverWait(driver, TimeSpan.FromSeconds(waitSeconds));
+
+            Wait = new WebDriverWait(
+                driver,
+                TimeSpan.FromSeconds(waitSeconds));
         }
 
         /// <summary>
         /// Gets the current browser page title.
         /// </summary>
         public string Title => Driver.Title;
+
+        /// <summary>
+        /// Waits until the specified element is visible and enabled,
+        /// then returns the web element.
+        /// </summary>
+        /// <param name="locator">
+        /// The Selenium locator used to find the element.
+        /// </param>
+        /// <returns>
+        /// The visible and enabled web element.
+        /// </returns>
+        protected IWebElement WaitForElement(By locator)
+        {
+            return Wait.Until(d =>
+            {
+                try
+                {
+                    var element = d.FindElement(locator);
+
+                    return element.Displayed && element.Enabled
+                        ? element
+                        : null;
+                }
+                catch
+                {
+                    return null;
+                }
+            });
+        }
+
+        /// <summary>
+        /// Clicks an element using JavaScript executor.
+        /// Useful for dynamic, overlayed, or React-based UI elements
+        /// where standard Selenium click actions may fail.
+        /// </summary>
+        /// <param name="element">
+        /// The target web element to be clicked.
+        /// </param>
+        protected void JsClick(IWebElement element)
+        {
+            try
+            {
+                element.Click();
+            }
+            catch
+            {
+                ((IJavaScriptExecutor)Driver)
+                    .ExecuteScript(
+                        "arguments[0].dispatchEvent(new MouseEvent('click', { bubbles: true }));",
+                        element);
+            }
+        }
+
+        /// <summary>
+        /// Gets text from an element safely.
+        /// </summary>
+        /// <param name="locator">
+        /// The Selenium locator.
+        /// </param>
+        /// <returns>
+        /// The element text if found; otherwise empty string.
+        /// </returns>
+        protected string GetElementText(By locator)
+        {
+            try
+            {
+                return WaitForElement(locator).Text;
+            }
+            catch
+            {
+                return string.Empty;
+            }
+        }
+
+        /// <summary>
+        /// Verifies whether an element is displayed.
+        /// </summary>
+        /// <param name="locator">
+        /// The Selenium locator.
+        /// </param>
+        /// <returns>
+        /// <c>true</c> if displayed; otherwise <c>false</c>.
+        /// </returns>
+        protected bool IsElementDisplayed(By locator)
+        {
+            try
+            {
+                return WaitForElement(locator).Displayed;
+            }
+            catch
+            {
+                return false;
+            }
+        }
     }
 }

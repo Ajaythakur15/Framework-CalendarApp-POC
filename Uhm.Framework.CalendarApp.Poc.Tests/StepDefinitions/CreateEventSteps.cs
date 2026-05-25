@@ -1,4 +1,5 @@
-﻿using OpenQA.Selenium;
+﻿using NUnit.Framework;
+using OpenQA.Selenium;
 using TechTalk.SpecFlow;
 using Uhm.Framework.CalendarApp.Poc.Tests.Pages;
 using Uhm.Framework.CalendarApp.Poc.Tests.Support;
@@ -7,7 +8,7 @@ namespace Uhm.Framework.CalendarApp.Poc.Tests.StepDefinitions
 {
     /// <summary>
     /// Step definition class that contains BDD step implementations
-    /// for creating a new event in the Calendar module.
+    /// for creating calendar events.
     /// </summary>
     [Binding]
     public class CreateEventSteps
@@ -18,30 +19,85 @@ namespace Uhm.Framework.CalendarApp.Poc.Tests.StepDefinitions
         /// <summary>
         /// Initializes a new instance of the <see cref="CreateEventSteps"/> class.
         /// </summary>
-        /// <param name="driver">The Selenium WebDriver instance.</param>
-        /// <param name="settings">The runtime test settings loaded from configuration.</param>
-        /// <param name="scenarioContext">The current SpecFlow scenario context.</param>
-        public CreateEventSteps(IWebDriver driver, TestSettings settings, ScenarioContext scenarioContext)
+        /// <param name="driver">
+        /// The Selenium WebDriver instance.
+        /// </param>
+        /// <param name="settings">
+        /// The runtime test settings loaded from configuration.
+        /// </param>
+        /// <param name="scenarioContext">
+        /// The current SpecFlow scenario context.
+        /// </param>
+        public CreateEventSteps(
+            IWebDriver driver,
+            TestSettings settings,
+            ScenarioContext scenarioContext)
         {
-            _calendarHomePage = new CalendarHomePage(driver, settings.ExplicitWaitSeconds);
+            _calendarHomePage =
+                new CalendarHomePage(
+                    driver,
+                    settings.ExplicitWaitSeconds);
+
             _scenarioContext = scenarioContext;
         }
 
         /// <summary>
-        /// Enters event details into the Add Event popup form.
+        /// Enters valid event details into the Add Event popup.
         /// </summary>
-        [When(@"I enter event details")]
-        public void WhenIEnterEventDetails()
+        [When(@"I enter valid event details")]
+        public void WhenIEnterValidEventDetails()
         {
-            var eventTitle = $"BDD Event {DateTime.Now:yyyyMMddHHmmss}";
+            var eventTitle = $"Automation Event {DateTime.Now:yyyyMMddHHmmss}";
             _scenarioContext["CreatedEventTitle"] = eventTitle;
 
-            _calendarHomePage.SelectCategory("Holiday");
+            var startDate = DateTime.Now
+                .AddDays(10)
+                .Date
+                .AddHours(15)
+                .AddMinutes(DateTime.Now.Second % 30);
+
+            var endDate = startDate.AddHours(1);
+
+            const string eventDescription = "Ajay Created through Calendar App BDD POC";
+
+            _calendarHomePage.SelectCategory("Conference");
+
             _calendarHomePage.EnterEventDetails(
                 eventTitle,
-                "05/20/2026 10:00 AM",
-                "05/20/2026 11:00 AM",
-                "Created through Calendar App BDD POC");
+                startDate.ToString("MM/dd/yyyy h:mm tt"),
+                endDate.ToString("MM/dd/yyyy h:mm tt"),
+                eventDescription);
+        }
+
+        /// <summary>
+        /// Enters overlapping event details into the Add Event popup.
+        /// </summary>
+        [When(@"I enter overlapping event details")]
+        public void WhenIEnterOverlappingEventDetails()
+        {
+            var eventTitle =
+                $"Overlap Event {DateTime.Now:yyyyMMddHHmmss}";
+
+            // Create future event tomorrow at 9 AM
+            var startDate =
+                DateTime.Today
+                    .AddDays(1)
+                    .AddHours(9);
+
+            var endDate =
+                startDate.AddHours(1);
+
+            const string eventDescription =
+                "Overlap validation test";
+
+            _calendarHomePage.SelectCategory(
+                "Holiday");
+
+            _calendarHomePage.EnterEventDetails(
+                eventTitle,
+                startDate.ToString("MM/dd/yyyy h:mm tt"),
+                endDate.ToString("MM/dd/yyyy h:mm tt"),
+                eventDescription);
         }
 
         /// <summary>
@@ -54,12 +110,46 @@ namespace Uhm.Framework.CalendarApp.Poc.Tests.StepDefinitions
         }
 
         /// <summary>
-        /// Verifies that the Add Event popup closes after saving the event.
+        /// Verifies that the overlap validation message is displayed.
+        /// </summary>
+        [Then(@"the overlap validation message should be displayed")]
+        public void ThenTheOverlapValidationMessageShouldBeDisplayed()
+        {
+            var validationMessage =
+                _calendarHomePage.GetEventValidationMessage();
+
+            Assert.That(
+                validationMessage,
+                Does.Contain("Time slot unavailable"),
+                "Expected overlap validation message was not displayed.");
+        }
+
+        /// <summary>
+        /// Verifies that the Add Event popup remains open.
+        /// </summary>
+        [Then(@"the Add Event popup should remain open")]
+        public void ThenTheAddEventPopupShouldRemainOpen()
+        {
+            Assert.That(
+                _calendarHomePage.IsAddEventPopupDisplayed(),
+                Is.True,
+                "Add Event popup was unexpectedly closed.");
+        }
+
+        /// <summary>
+        /// Verifies that the Add Event popup closes successfully.
         /// </summary>
         [Then(@"the Add Event popup should close")]
         public void ThenTheAddEventPopupShouldClose()
         {
-            Assert.That(_calendarHomePage.IsAddEventPopupClosed(), Is.True);
+            var errorMessage = _calendarHomePage.GetEventSaveErrorMessage();
+
+            Assert.That(
+                _calendarHomePage.IsAddEventPopupClosed(),
+                Is.True,
+                string.IsNullOrWhiteSpace(errorMessage)
+                    ? "Add Event popup did not close successfully."
+                    : $"Add Event popup did not close successfully. Validation/Error: {errorMessage}");
         }
     }
 }

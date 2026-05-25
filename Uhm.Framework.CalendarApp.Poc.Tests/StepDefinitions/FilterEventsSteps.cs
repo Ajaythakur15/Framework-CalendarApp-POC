@@ -1,4 +1,9 @@
-﻿using OpenQA.Selenium;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using OpenQA.Selenium;
 using TechTalk.SpecFlow;
 using Uhm.Framework.CalendarApp.Poc.Tests.Pages;
 using Uhm.Framework.CalendarApp.Poc.Tests.Support;
@@ -19,6 +24,7 @@ namespace Uhm.Framework.CalendarApp.Poc.Tests.StepDefinitions
         /// </summary>
         /// <param name="driver">The Selenium WebDriver instance.</param>
         /// <param name="settings">The runtime test settings loaded from configuration.</param>
+
         public FilterEventsSteps(IWebDriver driver, TestSettings settings)
         {
             _calendarHomePage = new CalendarHomePage(driver, settings.ExplicitWaitSeconds);
@@ -27,6 +33,7 @@ namespace Uhm.Framework.CalendarApp.Poc.Tests.StepDefinitions
         /// <summary>
         /// Selects an event category from the calendar filter control.
         /// </summary>
+        ///
         [When(@"I select an event filter category")]
         public void WhenISelectAnEventFilterCategory()
         {

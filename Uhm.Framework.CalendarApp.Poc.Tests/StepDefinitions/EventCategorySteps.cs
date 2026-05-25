@@ -29,7 +29,7 @@ namespace Uhm.Framework.CalendarApp.Poc.Tests.StepDefinitions
         /// </summary>
         [When(@"I open the event category dropdown")]
         public void WhenIOpenTheEventCategoryDropdown()
-        {   
+        {
             _calendarHomePage.OpenCategoryDropdown();
         }
 
