@@ -1,4 +1,4 @@
-﻿using OpenQA.Selenium;
+using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 
 namespace Uhm.Framework.CalendarApp.Poc.Tests.Pages
@@ -65,7 +65,7 @@ namespace Uhm.Framework.CalendarApp.Poc.Tests.Pages
                 {
                     return null;
                 }
-            });
+            }) ?? throw new NoSuchElementException($"Element was not found or not interactable for locator: {locator}");
         }
 
         /// <summary>

@@ -1,4 +1,5 @@
-﻿using OpenQA.Selenium;
+using NUnit.Framework;
+using OpenQA.Selenium;
 using TechTalk.SpecFlow;
 using Uhm.Framework.CalendarApp.Poc.Tests.Pages;
 using Uhm.Framework.CalendarApp.Poc.Tests.Support;
@@ -13,6 +14,7 @@ namespace Uhm.Framework.CalendarApp.Poc.Tests.StepDefinitions
     public class EventCategorySteps
     {
         private readonly CalendarHomePage _calendarHomePage;
+        private readonly TestData _testData;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EventCategorySteps"/> class.
@@ -22,6 +24,7 @@ namespace Uhm.Framework.CalendarApp.Poc.Tests.StepDefinitions
         public EventCategorySteps(IWebDriver driver, TestSettings settings)
         {
             _calendarHomePage = new CalendarHomePage(driver, settings.ExplicitWaitSeconds);
+            _testData = TestData.Load();
         }
 
         /// <summary>
@@ -41,8 +44,8 @@ namespace Uhm.Framework.CalendarApp.Poc.Tests.StepDefinitions
         {
             var categories = _calendarHomePage.GetAvailableCategories();
 
+            Assert.That(categories, Does.Contain(_testData.Calendar.EventCategory));
             Assert.That(categories, Does.Contain("Holiday"));
-            Assert.That(categories, Does.Contain("Conference"));
             Assert.That(categories, Does.Contain("Bill's Bonus Day"));
         }
     }

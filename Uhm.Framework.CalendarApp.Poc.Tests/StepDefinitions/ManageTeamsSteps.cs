@@ -1,4 +1,5 @@
-﻿using OpenQA.Selenium;
+using NUnit.Framework;
+using OpenQA.Selenium;
 using TechTalk.SpecFlow;
 using Uhm.Framework.CalendarApp.Poc.Tests.Pages;
 using Uhm.Framework.CalendarApp.Poc.Tests.Support;
@@ -14,6 +15,7 @@ namespace Uhm.Framework.CalendarApp.Poc.Tests.StepDefinitions
     {
         private readonly ManageTeamsPage _manageTeamsPage;
         private readonly ScenarioContext _scenarioContext;
+        private readonly TestData _testData;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ManageTeamsSteps"/> class.
@@ -25,6 +27,7 @@ namespace Uhm.Framework.CalendarApp.Poc.Tests.StepDefinitions
         {
             _manageTeamsPage = new ManageTeamsPage(driver, settings.ExplicitWaitSeconds);
             _scenarioContext = scenarioContext;
+            _testData = TestData.Load();
         }
 
         /// <summary>
@@ -56,8 +59,8 @@ namespace Uhm.Framework.CalendarApp.Poc.Tests.StepDefinitions
 
             _manageTeamsPage.EnterTeamDetails(
                 uniqueTeamName,
-                "Created through BDD Calendar App POC");
-            _manageTeamsPage.SelectReferenceTeam();
+                _testData.ManageTeams.Description);
+            _manageTeamsPage.SelectReferenceTeam(_testData.ManageTeams.ReferenceTeam);
         }
 
         /// <summary>
@@ -75,7 +78,10 @@ namespace Uhm.Framework.CalendarApp.Poc.Tests.StepDefinitions
         [Then(@"the Add Team popup should be displayed")]
         public void ThenTheAddTeamPopupShouldBeDisplayed()
         {
-            Assert.That(_manageTeamsPage.IsAddTeamPopupDisplayed(), Is.True);
+            Assert.That(
+                _manageTeamsPage.IsAddTeamPopupDisplayed(),
+                Is.True,
+                "Add Team popup was not displayed.");
         }
 
         /// <summary>
@@ -84,7 +90,10 @@ namespace Uhm.Framework.CalendarApp.Poc.Tests.StepDefinitions
         [Then(@"the team popup should close")]
         public void ThenTheTeamPopupShouldClose()
         {
-            Assert.That(_manageTeamsPage.IsAddTeamPopupClosed(), Is.True);
+            Assert.That(
+                _manageTeamsPage.IsAddTeamPopupClosed(),
+                Is.True,
+                "Add Team popup did not close after save.");
         }
     }
 }

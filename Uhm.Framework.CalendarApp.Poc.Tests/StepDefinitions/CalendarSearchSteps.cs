@@ -1,4 +1,5 @@
-﻿using OpenQA.Selenium;
+using NUnit.Framework;
+using OpenQA.Selenium;
 using TechTalk.SpecFlow;
 using Uhm.Framework.CalendarApp.Poc.Tests.Pages;
 using Uhm.Framework.CalendarApp.Poc.Tests.Support;
@@ -13,6 +14,7 @@ namespace Uhm.Framework.CalendarApp.Poc.Tests.StepDefinitions
     public class CalendarSearchSteps
     {
         private readonly CalendarHomePage _calendarHomePage;
+        private readonly TestData _testData;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CalendarSearchSteps"/> class.
@@ -22,6 +24,7 @@ namespace Uhm.Framework.CalendarApp.Poc.Tests.StepDefinitions
         public CalendarSearchSteps(IWebDriver driver, TestSettings settings)
         {
             _calendarHomePage = new CalendarHomePage(driver, settings.ExplicitWaitSeconds);
+            _testData = TestData.Load();
         }
 
         /// <summary>
@@ -30,7 +33,7 @@ namespace Uhm.Framework.CalendarApp.Poc.Tests.StepDefinitions
         [When(@"I select a team for calendar search")]
         public void WhenISelectATeamForCalendarSearch()
         {
-            _calendarHomePage.SelectTeam("ServicingSupport");
+            _calendarHomePage.SelectTeam(_testData.Calendar.DefaultTeam);
         }
 
         /// <summary>
@@ -48,7 +51,10 @@ namespace Uhm.Framework.CalendarApp.Poc.Tests.StepDefinitions
         [Then(@"the team calendar should be displayed")]
         public void ThenTheTeamCalendarShouldBeDisplayed()
         {
-            Assert.That(_calendarHomePage.IsCalendarDisplayed(), Is.True);
+            Assert.That(
+                _calendarHomePage.IsCalendarDisplayed(),
+                Is.True,
+                "Team calendar was not displayed after search.");
         }
     }
 }

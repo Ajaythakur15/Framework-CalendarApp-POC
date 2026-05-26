@@ -1,0 +1,16 @@
+{
+  "Calendar": {
+    "DefaultTeam": "ServicingSupport",
+    "EventCategory": "Conference",
+    "EventRemark": "Created through Calendar App BDD POC",
+    "ShiftRemark": "Created through Shift Management BDD POC"
+  },
+  "ManageAccess": {
+    "DefaultTeam": "ServicingSupport",
+    "DefaultEmailDomain": "test.com"
+  },
+  "ManageTeams": {
+    "ReferenceTeam": "ServicingSupport",
+    "Description": "Created through BDD Calendar App POC"
+  }
+}

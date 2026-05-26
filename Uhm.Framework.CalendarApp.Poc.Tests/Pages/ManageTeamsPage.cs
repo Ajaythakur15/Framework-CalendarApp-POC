@@ -1,4 +1,4 @@
-﻿using OpenQA.Selenium;
+using OpenQA.Selenium;
 
 namespace Uhm.Framework.CalendarApp.Poc.Tests.Pages
 {
@@ -72,13 +72,13 @@ namespace Uhm.Framework.CalendarApp.Poc.Tests.Pages
         /// <summary>
         /// Selects a reference team from the available dropdown options.
         /// </summary>
-        public void SelectReferenceTeam()
+        public void SelectReferenceTeam(string teamName)
         {
             var dropdown = Wait.Until(d => d.FindElement(_referenceTeamDropdown));
             dropdown.Click();
 
             var option = Wait.Until(d =>
-                d.FindElement(By.XPath("//*[contains(@class,'option') or @role='option' or self::option][contains(.,'Union Home Mortgage') or contains(.,'ServicingSupport')][1]")));
+                d.FindElement(By.XPath($"//*[contains(@class,'option') or @role='option' or self::option][contains(.,'{teamName}')][1]")));
             option.Click();
         }
 

@@ -1,4 +1,4 @@
-﻿using NUnit.Framework;
+using NUnit.Framework;
 using OpenQA.Selenium;
 using TechTalk.SpecFlow;
 using Uhm.Framework.CalendarApp.Poc.Tests.Pages;
@@ -15,30 +15,25 @@ namespace Uhm.Framework.CalendarApp.Poc.Tests.StepDefinitions
     {
         private readonly CalendarHomePage _calendarHomePage;
         private readonly ScenarioContext _scenarioContext;
+        private readonly TestData _testData;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CreateEventSteps"/> class.
         /// </summary>
-        /// <param name="driver">
-        /// The Selenium WebDriver instance.
-        /// </param>
-        /// <param name="settings">
-        /// The runtime test settings loaded from configuration.
-        /// </param>
-        /// <param name="scenarioContext">
-        /// The current SpecFlow scenario context.
-        /// </param>
+        /// <param name="driver">The Selenium WebDriver instance.</param>
+        /// <param name="settings">The runtime test settings loaded from configuration.</param>
+        /// <param name="scenarioContext">The current SpecFlow scenario context.</param>
         public CreateEventSteps(
             IWebDriver driver,
             TestSettings settings,
             ScenarioContext scenarioContext)
         {
-            _calendarHomePage =
-                new CalendarHomePage(
-                    driver,
-                    settings.ExplicitWaitSeconds);
+            _calendarHomePage = new CalendarHomePage(
+                driver,
+                settings.ExplicitWaitSeconds);
 
             _scenarioContext = scenarioContext;
+            _testData = TestData.Load();
         }
 
         /// <summary>
@@ -58,15 +53,13 @@ namespace Uhm.Framework.CalendarApp.Poc.Tests.StepDefinitions
 
             var endDate = startDate.AddHours(1);
 
-            const string eventDescription = "Ajay Created through Calendar App BDD POC";
-
-            _calendarHomePage.SelectCategory("Conference");
+            _calendarHomePage.SelectCategory(_testData.Calendar.EventCategory);
 
             _calendarHomePage.EnterEventDetails(
                 eventTitle,
                 startDate.ToString("MM/dd/yyyy h:mm tt"),
                 endDate.ToString("MM/dd/yyyy h:mm tt"),
-                eventDescription);
+                _testData.Calendar.EventRemark);
         }
 
         /// <summary>
@@ -75,29 +68,23 @@ namespace Uhm.Framework.CalendarApp.Poc.Tests.StepDefinitions
         [When(@"I enter overlapping event details")]
         public void WhenIEnterOverlappingEventDetails()
         {
-            var eventTitle =
-                $"Overlap Event {DateTime.Now:yyyyMMddHHmmss}";
+            var eventTitle = $"Overlap Event {DateTime.Now:yyyyMMddHHmmss}";
 
-            // Create future event tomorrow at 9 AM
-            var startDate =
-                DateTime.Today
-                    .AddDays(1)
-                    .AddHours(9);
+            var startDate = DateTime.Today
+                .AddDays(1)
+                .AddHours(9);
 
-            var endDate =
-                startDate.AddHours(1);
+            var endDate = startDate.AddHours(1);
 
-            const string eventDescription =
-                "Overlap validation test";
+            const string overlapRemark = "Overlap validation test";
 
-            _calendarHomePage.SelectCategory(
-                "Holiday");
+            _calendarHomePage.SelectCategory(_testData.Calendar.EventCategory);
 
             _calendarHomePage.EnterEventDetails(
                 eventTitle,
                 startDate.ToString("MM/dd/yyyy h:mm tt"),
                 endDate.ToString("MM/dd/yyyy h:mm tt"),
-                eventDescription);
+                overlapRemark);
         }
 
         /// <summary>
@@ -115,8 +102,7 @@ namespace Uhm.Framework.CalendarApp.Poc.Tests.StepDefinitions
         [Then(@"the overlap validation message should be displayed")]
         public void ThenTheOverlapValidationMessageShouldBeDisplayed()
         {
-            var validationMessage =
-                _calendarHomePage.GetEventValidationMessage();
+            var validationMessage = _calendarHomePage.GetEventValidationMessage();
 
             Assert.That(
                 validationMessage,

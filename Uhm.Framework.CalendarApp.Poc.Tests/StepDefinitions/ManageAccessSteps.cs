@@ -1,4 +1,4 @@
-﻿using NUnit.Framework;
+using NUnit.Framework;
 using OpenQA.Selenium;
 using TechTalk.SpecFlow;
 using Uhm.Framework.CalendarApp.Poc.Tests.Pages;
@@ -15,6 +15,7 @@ namespace Uhm.Framework.CalendarApp.Poc.Tests.StepDefinitions
     {
         private readonly ManageAccessPage _manageAccessPage;
         private readonly ScenarioContext _scenarioContext;
+        private readonly TestData _testData;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ManageAccessSteps"/> class.
@@ -32,6 +33,7 @@ namespace Uhm.Framework.CalendarApp.Poc.Tests.StepDefinitions
                 settings.ExplicitWaitSeconds);
 
             _scenarioContext = scenarioContext;
+            _testData = TestData.Load();
         }
 
         /// <summary>
@@ -75,12 +77,12 @@ namespace Uhm.Framework.CalendarApp.Poc.Tests.StepDefinitions
         [When(@"I enter access details")]
         public void WhenIEnterAccessDetails()
         {
-            //var uniqueEmail = $"bdd.user.{DateTime.Now:yyyyMMddHHmmss}@test.com";
-            var uniqueEmail = $"asingh@uhm.com";
+            var uniqueEmail =
+                $"bdd.user.{DateTime.Now:yyyyMMddHHmmss}@{_testData.ManageAccess.DefaultEmailDomain}";
 
             _scenarioContext["CreatedAccessEmail"] = uniqueEmail;
 
-            _manageAccessPage.SelectTeam("ServicingSupport");
+            _manageAccessPage.SelectTeam(_testData.ManageAccess.DefaultTeam);
             _manageAccessPage.EnterAccessDetails(uniqueEmail);
         }
 
@@ -121,7 +123,7 @@ namespace Uhm.Framework.CalendarApp.Poc.Tests.StepDefinitions
         }
 
         /// <summary>
-        /// Verifies that the selected access record was removed successfully.
+        /// Verifies that the selected access record count was reduced by one.
         /// </summary>
         [Then(@"the access record should be removed successfully")]
         public void ThenTheAccessRecordShouldBeRemovedSuccessfully()
@@ -138,6 +140,63 @@ namespace Uhm.Framework.CalendarApp.Poc.Tests.StepDefinitions
                 _manageAccessPage.IsAccessRecordCountReducedByOne(deletedEmail!, countBeforeDelete),
                 Is.True,
                 $"Access record count for email '{deletedEmail}' was not reduced by one.");
+        }
+
+        /// <summary>
+        /// Clicks edit on the last access record row.
+        /// </summary>
+        [When(@"I edit an existing access record")]
+        public void WhenIEditAnExistingAccessRecord()
+        {
+            var currentEmail = _manageAccessPage.GetLastAccessRecordEmail();
+            _scenarioContext["OriginalAccessEmail"] = currentEmail;
+
+            _manageAccessPage.ClickEditLastAccessRecord();
+        }
+
+        /// <summary>
+        /// Updates access details in the edit popup.
+        /// </summary>
+        [When(@"I update the access details")]
+        public void WhenIUpdateTheAccessDetails()
+        {
+            var updatedEmail = $"upd{DateTime.Now:HHmmss}@{_testData.ManageAccess.DefaultEmailDomain}";
+            _scenarioContext["UpdatedAccessEmail"] = updatedEmail;
+
+            _manageAccessPage.UpdateAccessDetails(updatedEmail);
+        }
+
+        /// <summary>
+        /// Saves the updated access record.
+        /// </summary>
+        [When(@"I save the updated access")]
+        public void WhenISaveTheUpdatedAccess()
+        {
+            _manageAccessPage.ClickUpdateAccess();
+        }
+
+        /// <summary>
+        /// Verifies that the updated access record was saved successfully.
+        /// </summary>
+        [Then(@"the access record should be updated successfully")]
+        public void ThenTheAccessRecordShouldBeUpdatedSuccessfully()
+        {
+            var updatedEmail = _scenarioContext["UpdatedAccessEmail"]?.ToString();
+
+            Assert.That(
+                _manageAccessPage.IsEditAccessPopupClosed(),
+                Is.True,
+                "Edit Access popup did not close after update.");
+
+            Assert.That(
+                updatedEmail,
+                Is.Not.Null.And.Not.Empty,
+                "Updated access email was not captured.");
+
+            Assert.That(
+                _manageAccessPage.IsAccessRecordPresent(updatedEmail!),
+                Is.True,
+                $"Updated access record with email '{updatedEmail}' was not found in the grid.");
         }
     }
 }

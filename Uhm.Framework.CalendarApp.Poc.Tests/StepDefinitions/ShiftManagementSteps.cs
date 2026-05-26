@@ -1,4 +1,4 @@
-﻿using NUnit.Framework;
+using NUnit.Framework;
 using OpenQA.Selenium;
 using TechTalk.SpecFlow;
 using Uhm.Framework.CalendarApp.Poc.Tests.Pages;
@@ -15,6 +15,7 @@ namespace Uhm.Framework.CalendarApp.Poc.Tests.StepDefinitions
     {
         private readonly CalendarHomePage _calendarHomePage;
         private readonly ScenarioContext _scenarioContext;
+        private readonly TestData _testData;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ShiftManagementSteps"/> class.
@@ -32,6 +33,7 @@ namespace Uhm.Framework.CalendarApp.Poc.Tests.StepDefinitions
                 settings.ExplicitWaitSeconds);
 
             _scenarioContext = scenarioContext;
+            _testData = TestData.Load();
         }
 
         /// <summary>
@@ -86,19 +88,17 @@ namespace Uhm.Framework.CalendarApp.Poc.Tests.StepDefinitions
             _scenarioContext["CreatedShiftTitle"] = shiftTitle;
 
             var startDate = DateTime.Now
-                .AddDays(8)
+                .AddDays(10)
                 .Date
                 .AddHours(16);
 
             var endDate = startDate.AddHours(2);
 
-            const string remark = "Created through Shift Management BDD POC";
-
             _calendarHomePage.EnterShiftOverrideDetails(
                 shiftTitle,
                 startDate.ToString("MM/dd/yyyy h:mm tt"),
                 endDate.ToString("MM/dd/yyyy h:mm tt"),
-                remark);
+                _testData.Calendar.ShiftRemark);
         }
 
         /// <summary>
@@ -117,12 +117,13 @@ namespace Uhm.Framework.CalendarApp.Poc.Tests.StepDefinitions
         public void ThenTheAddShiftPopupShouldClose()
         {
             var errorMessage = _calendarHomePage.GetShiftValidationMessage();
+
             Assert.That(
                 _calendarHomePage.IsAddShiftPopupClosed(),
                 Is.True,
                 string.IsNullOrWhiteSpace(errorMessage)
-            ? "Add Shift popup did not close successfully."
-            : $"Add Shift popup did not close successfully. Validation/Error: {errorMessage}");
+                    ? "Add Shift popup did not close successfully."
+                    : $"Add Shift popup did not close successfully. Validation/Error: {errorMessage}");
         }
     }
 }
