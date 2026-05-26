@@ -49,6 +49,7 @@ namespace Uhm.Framework.CalendarApp.Poc.Tests.Support
     public class ManageAccessTestData
     {
         public string DefaultTeam { get; set; } = string.Empty;
+        public string DefaultEmailPrefix { get; set; } = string.Empty;
         public string DefaultEmailDomain { get; set; } = string.Empty;
     }
 

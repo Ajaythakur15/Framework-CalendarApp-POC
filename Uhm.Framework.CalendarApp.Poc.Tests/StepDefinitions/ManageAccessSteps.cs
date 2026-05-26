@@ -78,7 +78,7 @@ namespace Uhm.Framework.CalendarApp.Poc.Tests.StepDefinitions
         public void WhenIEnterAccessDetails()
         {
             var uniqueEmail =
-                $"bdd.user.{DateTime.Now:yyyyMMddHHmmss}@{_testData.ManageAccess.DefaultEmailDomain}";
+                $"{_testData.ManageAccess.DefaultEmailPrefix}{DateTime.Now:HHmmss}@{_testData.ManageAccess.DefaultEmailDomain}";
 
             _scenarioContext["CreatedAccessEmail"] = uniqueEmail;
 
@@ -160,7 +160,8 @@ namespace Uhm.Framework.CalendarApp.Poc.Tests.StepDefinitions
         [When(@"I update the access details")]
         public void WhenIUpdateTheAccessDetails()
         {
-            var updatedEmail = $"upd{DateTime.Now:HHmmss}@{_testData.ManageAccess.DefaultEmailDomain}";
+            var updatedEmail =
+                $"edit{DateTime.Now:HHmmss}@{_testData.ManageAccess.DefaultEmailDomain}";
             _scenarioContext["UpdatedAccessEmail"] = updatedEmail;
 
             _manageAccessPage.UpdateAccessDetails(updatedEmail);

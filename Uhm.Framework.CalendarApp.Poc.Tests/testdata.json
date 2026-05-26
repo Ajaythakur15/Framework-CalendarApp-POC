@@ -7,7 +7,8 @@
   },
   "ManageAccess": {
     "DefaultTeam": "ServicingSupport",
-    "DefaultEmailDomain": "test.com"
+    "DefaultEmailPrefix": "ajay.auto",
+    "DefaultEmailDomain": "uhm.com"
   },
   "ManageTeams": {
     "ReferenceTeam": "ServicingSupport",
