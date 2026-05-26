@@ -32,6 +32,15 @@ namespace Uhm.Framework.CalendarApp.Poc.Tests.Pages
         private readonly By _teamMembersDropdown =
             By.XPath("//label[contains(.,'Team')]/following::select[2]");
 
+        private readonly By _lastRowEditButton =
+    By.XPath("(//div[contains(@class,'access-body-wrapper')])[last()]//div[contains(@class,'field-four')]/*[local-name()='svg' and contains(@class,'pointer')][1]");
+
+        private readonly By _editAccessPopupHeader =
+            By.XPath("//*[contains(text(),'Edit Access') or contains(text(),'Update Access') or contains(text(),'Add Access')]");
+
+        private readonly By _updateButton =
+            By.XPath("//button[contains(.,'Update') or contains(.,'Save')]");
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ManageAccessPage"/> class.
         /// </summary>
@@ -229,6 +238,88 @@ namespace Uhm.Framework.CalendarApp.Poc.Tests.Pages
             try
             {
                 Wait.Until(_ => GetAccessRecordCountByEmail(email) == previousCount - 1);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Clicks the edit icon for the last access record row.
+        /// </summary>
+        public void ClickEditLastAccessRecord()
+        {
+            var editIcon = WaitForElement(_lastRowEditButton);
+            JsClick(editIcon);
+        }
+
+        /// <summary>
+        /// Verifies whether the Edit Access popup is displayed.
+        /// </summary>
+        /// <returns>
+        /// <c>true</c> if the edit popup is visible; otherwise, <c>false</c>.
+        /// </returns>
+        public bool IsEditAccessPopupDisplayed()
+        {
+            try
+            {
+                return WaitForElement(_editAccessPopupHeader).Displayed;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Updates the access details in the edit popup.
+        /// </summary>
+        /// <param name="email">The updated email address.</param>
+        public void UpdateAccessDetails(string email)
+        {
+            var emailElement = WaitForElement(_emailInput);
+            emailElement.Clear();
+            emailElement.SendKeys(email);
+        }
+
+        /// <summary>
+        /// Clicks the Update/Save button on the edit popup.
+        /// </summary>
+        public void ClickUpdateAccess()
+        {
+            var updateButton = WaitForElement(_updateButton);
+            JsClick(updateButton);
+        }
+
+        /// <summary>
+        /// Verifies whether the access popup is closed after update.
+        /// </summary>
+        /// <returns>
+        /// <c>true</c> if the popup is no longer visible; otherwise, <c>false</c>.
+        /// </returns>
+        public bool IsEditAccessPopupClosed()
+        {
+            try
+            {
+                Wait.Until(_ => Driver.FindElements(_popupHeader).Count == 0);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public bool IsAccessRecordPresent(string email)
+        {
+            try
+            {
+                Wait.Until(_ =>
+                    Driver.FindElements(
+                        By.XPath($"//div[contains(@class,'field-three') and normalize-space()='{email}']")).Count > 0);
+
                 return true;
             }
             catch

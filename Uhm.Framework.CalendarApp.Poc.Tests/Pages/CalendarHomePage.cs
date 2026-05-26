@@ -63,6 +63,40 @@ namespace Uhm.Framework.CalendarApp.Poc.Tests.Pages
         private readonly By _calendarContentArea =
             By.XPath("//*[contains(text(),'Events')]");
 
+        // Shift Management Controls
+        private readonly By _shiftManagementTab =
+            By.XPath("//button[contains(.,'Shift Management')] | //*[contains(text(),'Shift Management')]");
+
+        private readonly By _shiftManagementView =
+            By.XPath("//*[contains(text(),'Default Shift') or contains(text(),'Shift Management')]");
+
+        private readonly By _addShiftButton =
+            By.XPath("//button[contains(text(),'ADD SHIFT')]");
+
+        private readonly By _addShiftPopupHeader =
+            By.XPath("//*[contains(text(),'Add New Shift Override')]");
+
+        private readonly By _shiftTitleInput =
+            By.XPath("//label[contains(.,'TITLE')]/following::input[1]");
+
+        private readonly By _shiftStartDateInput =
+            By.XPath("//label[contains(.,'START DATE')]/following::input[1]");
+
+        private readonly By _shiftEndDateInput =
+            By.XPath("//label[contains(.,'END DATE')]/following::input[1]");
+
+        private readonly By _shiftRemarkInput =
+            By.XPath("//label[contains(.,'REMARK')]/following::textarea[1]");
+
+        private readonly By _shiftSaveButton =
+            By.XPath("//button[contains(text(),'SAVE') or contains(text(),'Save')]");
+
+        private readonly By _shiftValidationMessage =
+            By.XPath("//*[contains(text(),'required') or contains(text(),'invalid') or contains(text(),'unavailable') or contains(text(),'already') or contains(text(),'error') or contains(text(),'Error')]");
+
+        private readonly By _shiftPopupCloseMarker =
+            By.XPath("//*[contains(text(),'Add New Shift Override')]");
+
         /// <summary>
         /// Initializes a new instance of the <see cref="CalendarHomePage"/> class.
         /// </summary>
@@ -288,6 +322,119 @@ namespace Uhm.Framework.CalendarApp.Poc.Tests.Pages
                 Wait.Until(_ =>
                 {
                     var popups = Driver.FindElements(_popupCloseMarker);
+                    return popups.Count == 0 || popups.All(p => !p.Displayed);
+                });
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Opens the Shift Management tab in the Calendar module.
+        /// </summary>
+        public void OpenShiftManagementTab()
+        {
+            var shiftTab = WaitForElement(_shiftManagementTab);
+            JsClick(shiftTab);
+        }
+
+        /// <summary>
+        /// Verifies whether the Shift Management view is displayed.
+        /// </summary>
+        /// <returns>
+        /// <c>true</c> if the Shift Management area is visible; otherwise, <c>false</c>.
+        /// </returns>
+        public bool IsShiftManagementDisplayed()
+        {
+            return IsElementDisplayed(_shiftManagementView);
+        }
+
+        /// <summary>
+        /// Clicks the Add Shift button in Shift Management.
+        /// </summary>
+        public void ClickAddShift()
+        {
+            var addShiftButton = WaitForElement(_addShiftButton);
+            JsClick(addShiftButton);
+        }
+
+        /// <summary>
+        /// Verifies whether the Add Shift popup is displayed.
+        /// </summary>
+        /// <returns>
+        /// <c>true</c> if the Add Shift popup is visible; otherwise, <c>false</c>.
+        /// </returns>
+        public bool IsAddShiftPopupDisplayed()
+        {
+            return IsElementDisplayed(_addShiftPopupHeader);
+        }
+
+        /// <summary>
+        /// Enters shift override details into the Add Shift popup form.
+        /// </summary>
+        /// <param name="title">The shift override title.</param>
+        /// <param name="startDateTime">The shift start date and time.</param>
+        /// <param name="endDateTime">The shift end date and time.</param>
+        /// <param name="remark">The remark text.</param>
+        public void EnterShiftOverrideDetails(
+            string title,
+            string startDateTime,
+            string endDateTime,
+            string remark)
+        {
+            var titleElement = WaitForElement(_shiftTitleInput);
+            titleElement.Clear();
+            titleElement.SendKeys(title);
+
+            var startElement = WaitForElement(_shiftStartDateInput);
+            startElement.Clear();
+            startElement.SendKeys(startDateTime);
+
+            var endElement = WaitForElement(_shiftEndDateInput);
+            endElement.Clear();
+            endElement.SendKeys(endDateTime);
+
+            var remarkElement = WaitForElement(_shiftRemarkInput);
+            remarkElement.Clear();
+            remarkElement.SendKeys(remark);
+        }
+
+        /// <summary>
+        /// Clicks the Save button on the Add Shift popup.
+        /// </summary>
+        public void ClickSaveShiftOverride()
+        {
+            JsClick(WaitForElement(_shiftSaveButton));
+        }
+
+        /// <summary>
+        /// Gets the shift validation or error message if displayed.
+        /// </summary>
+        /// <returns>
+        /// The validation/error text if present; otherwise empty string.
+        /// </returns>
+        public string GetShiftValidationMessage()
+        {
+            return GetElementText(_shiftValidationMessage);
+        }
+
+        /// <summary>
+        /// Verifies whether the Add Shift popup is closed after save.
+        /// </summary>
+        /// <returns>
+        /// <c>true</c> if the popup is no longer visible; otherwise, <c>false</c>.
+        /// </returns>
+        public bool IsAddShiftPopupClosed()
+        {
+            try
+            {
+                Wait.Until(_ =>
+                {
+                    var popups = Driver.FindElements(_shiftPopupCloseMarker);
                     return popups.Count == 0 || popups.All(p => !p.Displayed);
                 });
 
