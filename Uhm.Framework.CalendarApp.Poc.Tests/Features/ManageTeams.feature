@@ -8,4 +8,6 @@ Feature: Manage Teams
     Given I navigate to the calendar application
     When I open the Manage Teams module
     And I click the Add Team button
+    And I enter team details
+    And I save the team
     Then the Add Team popup should be displayed
